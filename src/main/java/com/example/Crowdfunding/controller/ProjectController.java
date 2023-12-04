@@ -19,7 +19,12 @@ public class ProjectController {
 
     @GetMapping("/{id}")
     public ProjectResponse getProjectById(@PathVariable Long id){
+        return projectService.getProjectById(id);
+    }
 
+    @GetMapping("/totalSum/{id}")
+    public int getTotalSum(@PathVariable Long id){
+        return projectService.getTotalSum(id);
     }
 
 

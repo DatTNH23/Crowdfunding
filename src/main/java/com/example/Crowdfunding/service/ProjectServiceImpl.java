@@ -6,7 +6,7 @@ import com.example.Crowdfunding.dao.ProjectRepository;
 import com.example.Crowdfunding.dto.ProjectResponse;
 import com.example.Crowdfunding.entity.Project;
 import com.example.Crowdfunding.entity.ProjectOption;
-import com.example.Crowdfunding.exception.ProjectNotFoundException;
+import com.example.Crowdfunding.exception.NotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -21,8 +21,10 @@ public class ProjectServiceImpl implements ProjectService {
     private ProjectRepository projectRepository;
     private ProjectOptionRepository projectOptionRepository;
 
-    public ProjectServiceImpl(ProjectRepository projectRepository) {
+    public ProjectServiceImpl(ProjectRepository projectRepository,
+                              ProjectOptionRepository projectOptionRepository) {
         this.projectRepository = projectRepository;
+        this.projectOptionRepository = projectOptionRepository;
     }
 
     @Override
@@ -37,16 +39,19 @@ public class ProjectServiceImpl implements ProjectService {
             response.setStatus(getStatusProject(project));
             return response;
         } else {
-            throw new ProjectNotFoundException("Project not found with id: " + id);
+            throw new NotFoundException("Project not found with id: " + id);
         }
     }
-
+    @Override
+    public int getTotalSum(Long id){
+        return totalAmount(id);
+    }
     private int getStatusProject(Project project){
 
         double lowerThreshold = 0.5 * project.getTarget();
         double upperThreshold = 1.0 * project.getTarget();
 
-        double amount = (double) getTotalAmount(project.getId());
+        double amount = (double) getTotalSum(project.getId());
         if (amount < lowerThreshold) {
             return 1;
         } else if (amount >= lowerThreshold && amount < upperThreshold) {
@@ -55,9 +60,17 @@ public class ProjectServiceImpl implements ProjectService {
             return 3;
         }
     }
-    private int getTotalAmount(Long id){
-        //Optional<List<ProjectOption>> projectOptionsOptional =
-        return 0;
+    private int totalAmount(Long id){
+        Optional<List<ProjectOption>> projectOptionsOptional = projectOptionRepository.findByProjectId(id);
+        if (projectOptionsOptional.isPresent()) {
+            List<ProjectOption> projectOptions = projectOptionsOptional.get();
+            int sumOfAmount = projectOptions.stream()
+                    .mapToInt(ProjectOption::getAmount)
+                    .sum();
+            return sumOfAmount;
+        } else {
+           throw new NotFoundException("Cannot get total Amount, because project not found with id: " + id);
+        }
     }
     private int DateDifference(Date start, Date end){
         Instant startInstant = start.toInstant();
