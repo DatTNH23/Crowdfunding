@@ -1,6 +1,9 @@
 package com.example.Crowdfunding.controller;
 
+import com.example.Crowdfunding.dto.ProjectResponse;
 import com.example.Crowdfunding.service.ProjectService;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,6 +17,10 @@ public class ProjectController {
         this.projectService = projectService;
     }
 
+    @GetMapping("/{id}")
+    public ProjectResponse getProjectById(@PathVariable Long id){
+
+    }
 
 
 }
