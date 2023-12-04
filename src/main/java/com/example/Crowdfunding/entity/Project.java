@@ -29,6 +29,6 @@ public class Project {
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private List<ProjectOption> options;
 
-    @ManyToMany(mappedBy = "project")
+    @OneToMany(mappedBy = "project",cascade = CascadeType.ALL)
     private List<Fund> funds;
 }

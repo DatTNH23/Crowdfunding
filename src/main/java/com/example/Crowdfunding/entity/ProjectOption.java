@@ -25,4 +25,8 @@ public class ProjectOption {
     @ManyToOne
     @JoinColumn(name = "project_id")
     private Project project;
+
+    @OneToOne
+    @JoinColumn(name = "fund_id")
+    private Fund fund;
 }

@@ -1,5 +1,7 @@
 package com.example.Crowdfunding.controller;
 
+
+import com.example.Crowdfunding.dto.ListFundResponse;
 import com.example.Crowdfunding.dto.ProjectResponse;
 import com.example.Crowdfunding.service.ProjectService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,8 +26,12 @@ public class ProjectController {
 
     @GetMapping("/totalSum/{id}")
     public int getTotalSum(@PathVariable Long id){
-        return projectService.getTotalSum(id);
+        return projectService.getTotalSumById(id);
     }
 
+    @GetMapping("/funds/{id}")
+    public ListFundResponse getFunds(@PathVariable Long id){
+        return projectService.getFundsById(id);
+    }
 
 }

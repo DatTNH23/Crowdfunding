@@ -19,9 +19,10 @@ public class Fund {
     @Column(name = "amount")
     private int amount;
 
-    @ManyToMany
-    @JoinTable(name = "project_funds",
-            joinColumns = @JoinColumn(name = "project_id"),
-            inverseJoinColumns = @JoinColumn(name = "fund_id"))
-    private List<Project> projects;
+    @OneToOne(mappedBy = "fund")
+    private ProjectOption projectOption;
+
+    @ManyToOne
+    @JoinColumn(name ="project_id")
+    private Project project;
 }
